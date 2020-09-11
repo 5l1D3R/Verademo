@@ -62,7 +62,7 @@ pipeline {
             steps{
                 //Pipeline scan
                 sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
-                sh 'unzip pipeline-scan-LATEST.zip pipeline-scan.jar'
+                sh 'unzip -o pipeline-scan-LATEST.zip pipeline-scan.jar'
                 sh 'java -jar pipeline-scan.jar -vid "${VERACODEID}" -vkey "${VERACODEKEY}" --file target/verademo.war'
                 // 3rd party scan application
                 withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
