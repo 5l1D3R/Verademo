@@ -64,13 +64,13 @@ pipeline {
             steps{
                 unstash 'app'
                 //Pipeline scan
-                sh '''curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+                sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
                 unzip pipeline-scan-LATEST.zip pipeline-scan.jar
                 java -jar pipeline-scan.jar -vid "${VERACODEID}" -vkey "${VERACODEKEY} --file target/verademo.war
-                '''
+                '
                 // 3rd party scan application
                 withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                    sh "curl -sSL https://download.sourceclear.com/ci.sh | sh"
+                    sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
                 }
                 // 3rd party scan docker container
                 withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
