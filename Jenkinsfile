@@ -14,7 +14,6 @@ pipeline {
                 branch 'master'
             }
             steps {
-                unstash 'app'
                 // Policy scan
                 withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
                     veracode applicationName: "Verademo", criticality: 'VeryHigh',
@@ -38,7 +37,6 @@ pipeline {
                 branch "release"
             }
             steps {
-                unstash 'app'
                 // Sandbox scan
                 withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
                     veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "${env.GIT_BRANCH}", 
@@ -62,7 +60,6 @@ pipeline {
                 branch "development"
             }
             steps{
-                unstash 'app'
                 //Pipeline scan
                 sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
                 sh 'unzip pipeline-scan-LATEST.zip pipeline-scan.jar'
