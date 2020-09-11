@@ -13,9 +13,9 @@ pipeline {
             }
         }
         stage('Security Scan Master Branch') {
-            when {}
+            when {
                 branch 'master'
-        }
+            }
             steps {
                 unstash 'app'
                 // Policy scan
