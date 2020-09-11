@@ -2,14 +2,11 @@ pipeline {
     agent any
     stages {
         stage('Build') {
-            agent {
-                docker { image 'maven:3.6.3-jdk-11' }
-            }
             steps {
                 // Compile Java app
                 sh 'mvn clean package'
                 // pull docker container
-                sh 'doker pull juliantotzek/verademo1-tomcat'
+                //sh 'doker pull juliantotzek/verademo1-tomcat'
             }
         }
         stage('Security Scan Master Branch') {
