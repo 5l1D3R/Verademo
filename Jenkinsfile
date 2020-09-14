@@ -65,11 +65,11 @@ pipeline {
                     sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
                     sh 'unzip -o pipeline-scan-LATEST.zip pipeline-scan.jar'
                     sh '''java -jar pipeline-scan.jar -vid "$VERACODEID" -vkey "$VERACODEKEY" --file target/verademo.war'''
-                }
+                
                 // 3rd party scan application
                 withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
                     sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
-                }
+                
                 // 3rd party scan docker container
                 withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
                     sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
