@@ -70,7 +70,7 @@ Pipeline Scan Staic Analysis:
         - curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
         - unzip pipeline-scan-LATEST.zip
     script:
-        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation
+        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation=true
     artifacts:
         paths:
             - results.json
