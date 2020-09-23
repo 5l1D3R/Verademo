@@ -61,7 +61,7 @@ pipeline {
             }
             steps{
                 parallel(
-                    a:{
+                    a: 
                         //Pipeline scan
                         withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
                             sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
@@ -69,13 +69,13 @@ pipeline {
                             sh '''java -jar pipeline-scan.jar -vid "$VERACODEID" -vkey "$VERACODEKEY" --file target/verademo.war'''
                         }
                     }
-                    b:{
+                    b: {
                         // 3rd party scan application
                         withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
                             sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
                         }
                     }
-                    c:{
+                    c: {
                         // 3rd party scan docker container
                         withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
                             sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
