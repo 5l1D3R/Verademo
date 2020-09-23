@@ -61,7 +61,7 @@ pipeline {
             }
             steps{
                 parallel(
-                    a: 
+                    a:{
                         //Pipeline scan
                         withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
                             sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
