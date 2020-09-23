@@ -60,22 +60,28 @@ pipeline {
                 branch "development"
             }
             steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
-                    //Pipeline scan
-                    withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
-                        sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
-                        sh 'unzip -o pipeline-scan-LATEST.zip pipeline-scan.jar'
-                        sh '''java -jar pipeline-scan.jar -vid "$VERACODEID" -vkey "$VERACODEKEY" --file target/verademo.war'''
+                parallel(
+                    a:{
+                        //Pipeline scan
+                        withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
+                            sh 'curl -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
+                            sh 'unzip -o pipeline-scan-LATEST.zip pipeline-scan.jar'
+                            sh '''java -jar pipeline-scan.jar -vid "$VERACODEID" -vkey "$VERACODEKEY" --file target/verademo.war'''
+                        }
                     }
-                    // 3rd party scan application
-                    withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                        sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
+                    b:{
+                        // 3rd party scan application
+                        withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
+                        }
                     }
-                    // 3rd party scan docker container
-                    withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                        sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
+                    c:{
+                        // 3rd party scan docker container
+                        withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
+                        }
                     }
-                }
+                )
             }
         }
         stage ('Deploy Application into docker and start docker'){
