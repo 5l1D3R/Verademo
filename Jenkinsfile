@@ -14,22 +14,30 @@ pipeline {
                 branch 'master'
             }
             steps {
-                // Policy scan
-                withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
-                    veracode applicationName: "Verademo", criticality: 'VeryHigh',
-                    fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
-                    scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
-                    uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
-                    vid: VERACODEID, vkey: VERACODEKEY
-                }
-                // 3rd party scan application
-                withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                    sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
-                }
-                // 3rd party scan docker container
-                withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                    sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
-                }
+                parallel(
+                    a:{
+                        // Policy scan
+                        withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
+                            veracode applicationName: "Verademo", criticality: 'VeryHigh',
+                            fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
+                            scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
+                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
+                            vid: VERACODEID, vkey: VERACODEKEY
+                        }
+                    },
+                    b:{
+                        // 3rd party scan application
+                        withCredentials([string(credentialsId: 'SRCCLR_API_TOKEN', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
+                        }
+                    },
+                    c:{
+                        // 3rd party scan docker container
+                        withCredentials([string(credentialsId: 'SRCCLR_API_TOKEN', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
+                        }
+                    }
+                )
             }
         }
         stage('Security Scan Feature Branch'){
@@ -37,22 +45,30 @@ pipeline {
                 branch "release"
             }
             steps {
-                // Sandbox scan
-                withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
-                    veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "${env.GIT_BRANCH}", 
-                    fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
-                    scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
-                    uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
-                    vid: VERACODEID, vkey: VERACODEKEY
-                }
-                // 3rd party scan application
-                withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                    sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
-                }
-                // 3rd party scan docker container
-                withCredentials([string(credentialsId: 'sca-agent', variable: 'SRCCLR_API_TOKEN')]) {
-                    sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
-                }
+                parallel(
+                    a:{
+                        // Sandbox scan
+                        withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
+                            veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "${env.GIT_BRANCH}", 
+                            fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
+                            scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
+                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
+                            vid: VERACODEID, vkey: VERACODEKEY
+                        }
+                    },
+                    b:{
+                        // 3rd party scan application
+                        withCredentials([string(credentialsId: 'SRCCLR_API_TOKEN', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh'
+                        }
+                    },
+                    c:{
+                        // 3rd party scan docker container
+                        withCredentials([string(credentialsId: 'SRCCLR_API_TOKEN', variable: 'SRCCLR_API_TOKEN')]) {
+                            sh 'curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image juliantotzek/verademo1-tomcat'
+                        }
+                    }
+                )
             }
         }
         stage('Security Scan Development Branch'){
@@ -91,8 +107,8 @@ pipeline {
             }
             steps{
                 // Deploy Application into docker and start docker
-                sh '''docker -H3.120.207.156:2375 run  --detach --network verademo --hostname verademo.verademo.com --network-alias verademo.verademo.com -p 80:8080 --name verademo --restart=no --volume /Users/ubuntu/docker/volumes/verademo/data:/var/verademo_home verademo
-                    docker -H3.120.207.156:2375 start verademo'''
+                //sh '''docker -H3.120.207.156:2375 run  --detach --network verademo --hostname verademo.verademo.com --network-alias verademo.verademo.com -p 80:8080 --name verademo --restart=no --volume /Users/ubuntu/docker/volumes/verademo/data:/var/verademo_home verademo
+                //    docker -H3.120.207.156:2375 start verademo'''
             }
         }
         stage ('Security Scan - Dynamic Analysis'){
