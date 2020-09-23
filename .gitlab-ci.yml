@@ -1,3 +1,4 @@
+
 stages:
     - Build
     - Security_Scan
@@ -84,9 +85,9 @@ Sandbox Scan Static Analysis:
     only:
         - release
     before_script:
-        - wget -q -O VeracodeJavaAPI.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
+        - wget -q -O veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
     script:
-        - java -jar VeracodeJavaAPI.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
+        - java -jar $HOME/helpers/VeracodeJavaAPI.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release"
           -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
     allow_failure: true
@@ -98,10 +99,10 @@ Policy Scan Static Analysis:
         - schedules
         - master
     before_script:
-            - wget -q -O VeracodeJavaAPI.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
+            - wget -q -O veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
     script:
-        - java -jar VeracodeJavaAPI.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
-          -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true
+        - java -jar $HOME/helpers/VeracodeJavaAPI.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
+          -action UploadAndScan -appname "Verademo" -createprofile false -autoscan true
           -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
           -scantimeout 15
 
