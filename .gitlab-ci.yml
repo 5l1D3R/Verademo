@@ -1,18 +1,12 @@
 stages:
-    - SCA
-    - build
-    - scan
-    
-Software Composition Analysis:
-    image: maven:3.6.0-jdk-8
-    stage: SCA
-    script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash
+    - Build
+    - Security_Scan
+    - Deploy_Run
+    - Dynamic_Analysis
 
-
-compile-application:
+Compile Application:
     image: maven:3.6.0-jdk-8
-    stage: build
+    stage: Build
     script:
       - mvn clean package
     artifacts:
@@ -25,26 +19,68 @@ compile-application:
         - target/
         - .m2/repository
 
-development-upload-for-sast:
+Build Docker Image:
+    image: docker:19.03.8-dind 
+    stage: Build
+    services:
+        - docker:19.03.8-dind
+    before_script:
+        - docker info
+    script:
+        - docker build -t verademo .
+
+
+Software Composition Analysis App 3rd party:
+    image: maven:3.6.0-jdk-8
+    stage: Security_Scan
+    script:
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash
+    artifacts:
+        paths:
+            - results.json
+        when: always
+        name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: false
+
+Software Composition Analysis Docker 3rd party:
+    image: juliantotzek/dockercli
+    stage: Security_Scan
+    services:
+        - docker:dind
+    variables:
+        DOCKER_HOST: tcp://docker:2375
+    before_script:
+        - docker pull juliantotzek/verademo1-tomcat
+    
+    script:
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat
+    artifacts:
+        paths:
+            - results.json
+        when: always
+        name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: false
+
+Pipeline Scan Staic Analysis:
     image: openjdk:11-jre
-    stage: scan
+    stage: Security_Scan
     only:
         - development
     before_script:
         - curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
         - unzip pipeline-scan-LATEST.zip
     script:
-        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war
+        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation=true
     artifacts:
         paths:
             - results.json
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: true
+    allow_failure: false
     
-release-upload-for-sast:
+Sandbox Scan Static Analysis:
     image: openjdk:11-jre
-    stage: scan
+    stage: Security_Scan
     only:
         - release
     before_script:
@@ -55,9 +91,9 @@ release-upload-for-sast:
           -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
     allow_failure: true
     
-policy-upload-for-sast:
+Policy Scan Static Analysis:
     image: openjdk:11-jre
-    stage: scan
+    stage: Security_Scan
     only:
         - schedules
         - master
@@ -68,3 +104,24 @@ policy-upload-for-sast:
           -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true
           -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
           -scantimeout 15
+
+Docker Start in Staging:
+    image: docker:19.03.8-dind 
+    stage: Deploy_Run
+    only:
+        - development
+        - release
+    services:
+         - docker:19.03.8-dind
+    before_script:
+            - docker info
+    script:
+        - docker run verademo
+
+Dynamic Analysis in Staging:
+    stage: Dynamic_Analysis
+    only:
+        - development
+        - release
+    script:
+        - http --auth-type veracode_hmac PUT https://api.veracode.com//was/configservice/v1/scan_occurrences/358303b78b3670b42083a410c770323d?action=RESUBMIT
