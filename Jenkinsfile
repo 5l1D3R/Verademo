@@ -102,8 +102,10 @@ pipeline {
         }
         stage ('Deploy Application into docker and start docker'){
             when {
-                branch 'master'
-                branch 'release'
+                anyOf{
+                    branch 'master';
+                    branch 'release'
+                }
             }
             steps{
                 // Deploy Application into docker and start docker
