@@ -20,7 +20,7 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
                             veracode applicationName: "Verademo", criticality: 'VeryHigh',
                             fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
-                            scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
+                            scanName: 'build $buildnumber - Jenkins',
                             uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
                             vid: VERACODEID, vkey: VERACODEKEY
                         }
@@ -49,9 +49,9 @@ pipeline {
                     a:{
                         // Sandbox scan
                         withCredentials([usernamePassword(credentialsId: 'VeracodeAPI', passwordVariable: 'VERACODEKEY', usernameVariable: 'VERACODEID')]) {
-                            veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "${env.GIT_BRANCH}", 
+                            veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "jenkins-release", 
                             fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
-                            scanName: "commit ${env.GIT_COMMIT[0..6]} build ${env.BUILD_NUMBER} - Jenkins",
+                            scanName: 'build $buildnumber - Jenkins',
                             uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
                             vid: VERACODEID, vkey: VERACODEKEY
                         }
@@ -111,6 +111,7 @@ pipeline {
                 // Deploy Application into docker and start docker
                 //sh '''docker -H3.120.207.156:2375 run  --detach --network verademo --hostname verademo.verademo.com --network-alias verademo.verademo.com -p 80:8080 --name verademo --restart=no --volume /Users/ubuntu/docker/volumes/verademo/data:/var/verademo_home verademo
                 //    docker -H3.120.207.156:2375 start verademo'''
+                echo 'do nothing'
             }
         }
         stage ('Security Scan - Dynamic Analysis'){
