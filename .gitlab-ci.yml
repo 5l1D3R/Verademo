@@ -1,4 +1,3 @@
-
 stages:
     - Build
     - Security_Scan
@@ -71,10 +70,11 @@ Pipeline Scan Staic Analysis:
         - curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
         - unzip pipeline-scan-LATEST.zip
     script:
-        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation=true
+        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation true
     artifacts:
         paths:
             - results.json
+            - veracode_gitlab_vulnerabilities.json
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
@@ -90,6 +90,7 @@ Sandbox Scan Static Analysis:
         - java -jar veracode-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release"
           -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
+          -scantimeout 15
     allow_failure: true
     
 Policy Scan Static Analysis:

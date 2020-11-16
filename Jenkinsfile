@@ -21,7 +21,7 @@ pipeline {
                             veracode applicationName: "Verademo", criticality: 'VeryHigh',
                             fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
                             scanName: 'build $buildnumber - Jenkins',
-                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
+                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war', waitForScan: true,
                             vid: VERACODEID, vkey: VERACODEKEY
                         }
                     },
