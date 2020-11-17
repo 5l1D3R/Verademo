@@ -53,12 +53,12 @@ Software Composition Analysis Docker 3rd party:
         - docker pull juliantotzek/verademo1-tomcat
     
     script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat 2>&1 | tee sca_docker_output.txt
     artifacts:
         paths:
-            - results.json
+            - sca_docker_output.txt
         when: always
-        name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+        name: "veracode-SCA-DOCKER-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
 
 Pipeline Scan Staic Analysis:
@@ -82,9 +82,13 @@ Sandbox Scan Static Analysis:
         - release
     script:
         - java -jar veracode-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
-          -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release"
-          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
-          -scantimeout 15
+          -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release" -createsandbox true
+          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 2>&1 | tee sandbox_scan_output.txt
+    artifacts:
+        paths:
+            - sandbox_scan_output.txt
+        when: always
+        name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
     
 Policy Scan Static Analysis:
@@ -96,8 +100,13 @@ Policy Scan Static Analysis:
     script:
         - java -jar veracode-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile false -autoscan true
-          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}"
+          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 2>&1 | tee policy_scan_output.txt
           -scantimeout 15
+    artifacts:
+        paths:
+            - policy_scan_output.txt
+        when: always
+        name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
 Docker Start in Staging:
     image: docker:19.03.8-dind 
