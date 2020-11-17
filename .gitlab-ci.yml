@@ -35,10 +35,10 @@ Software Composition Analysis App 3rd party:
     stage: Security_Scan
     script:
         - export SRCCLR_CI_JSON=1
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor  2>&1 | tee sca_output.txt
     artifacts:
         paths:
-            - results.json
+            - sca_output.txt
         when: always
         name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
@@ -68,7 +68,7 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details ture --gl_issue_generation true -jf results.json
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true -jf results.json
     artifacts:
         paths:
             - results.json
