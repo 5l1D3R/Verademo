@@ -67,7 +67,7 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_issue_generation true
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_issue_generation true
     artifacts:
         paths:
             - results.json
