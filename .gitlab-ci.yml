@@ -27,7 +27,7 @@ Build Docker Image:
     before_script:
         - docker info
     script:
-        - docker build -t verademo .
+        - docker pull juliantotzek/verademo1-tomcat
 
 
 Software Composition Analysis App 3rd party:
@@ -62,15 +62,12 @@ Software Composition Analysis Docker 3rd party:
     allow_failure: false
 
 Pipeline Scan Staic Analysis:
-    image: openjdk:11-jre
+    image: veracode/pipeline-scan:latest
     stage: Security_Scan
     only:
         - development
-    before_script:
-        - curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-        - unzip pipeline-scan-LATEST.zip
     script:
-        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_vulnerability_generation true
+        - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf results.json --gl_issue_generation true
     artifacts:
         paths:
             - results.json
