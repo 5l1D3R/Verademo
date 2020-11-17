@@ -51,7 +51,7 @@ public class ToolsController {
 		String output = "";
 		Process proc;
 		try {
-			/* START BAD CODE */
+			/* START BAD CODE ---- */
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				proc = Runtime.getRuntime().exec("cmd.exe /c ping " + host);
 			}
@@ -73,6 +73,9 @@ public class ToolsController {
 			logger.error(ex);
 		}
 		return output;
+		
+		
+		
 	}
 
 	private String fortune(String fortuneFile)

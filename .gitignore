@@ -10,3 +10,4 @@ target/
 WebContent/
 flaws.json
 .vscode/settings.json
+/bin/
