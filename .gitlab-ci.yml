@@ -34,6 +34,7 @@ Software Composition Analysis App 3rd party:
     image: maven:3.6.0-jdk-8
     stage: Security_Scan
     script:
+        - export SRCCLR_CI_JSON=1
         - curl -sSL https://download.sourceclear.com/ci.sh | bash
     artifacts:
         paths:
@@ -67,7 +68,7 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details --gl_issue_generation true -jf results.json
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details ture --gl_issue_generation true -jf results.json
     artifacts:
         paths:
             - results.json
