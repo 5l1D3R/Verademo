@@ -118,6 +118,7 @@ Docker Start in Staging:
     only:
         - development
         - release
+        - master
     services:
          - docker:19.03.8-dind
     before_script:
@@ -131,5 +132,6 @@ Dynamic Analysis in Staging:
     only:
         - development
         - release
+        - master
     script:
         - http --auth-type veracode_hmac PUT https://api.veracode.com//was/configservice/v1/scan_occurrences/358303b78b3670b42083a410c770323d?action=RESUBMIT
