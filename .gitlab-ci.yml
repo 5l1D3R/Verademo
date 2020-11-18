@@ -74,6 +74,8 @@ Pipeline Scan Staic Analysis:
             - veracode_gitlab_vulnerabilities.json
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    reports: 
+        sast: veracode_gitlab_vulnerabilities.json
     allow_failure: false
     
 Sandbox Scan Static Analysis:
