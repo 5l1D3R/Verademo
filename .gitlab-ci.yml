@@ -67,15 +67,12 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_vulnerability_generation true -jf results.json
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true -jf results.json
     artifacts:
         paths:
             - results.json
-            - veracode_gitlab_vulnerabilities.json
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-        reports: 
-            sast: veracode_gitlab_vulnerabilities.json
     allow_failure: false
     
 Sandbox Scan Static Analysis:
