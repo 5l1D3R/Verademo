@@ -123,7 +123,7 @@ Policy Scan Static Analysis:
 #        - docker run juliantotzek/verademo1-tomcat
 
 Dynamic Analysis in Staging:
-    image: veracode/veracode-api-signing
+    image: veracode/api-signing
     stage: Dynamic_Analysis
     only:
         - development
