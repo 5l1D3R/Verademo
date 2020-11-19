@@ -110,19 +110,19 @@ Policy Scan Static Analysis:
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
 
-Docker Start in Staging:
-    image: docker:19.03.8-dind 
-    stage: Deploy_Run
-    only:
-        - development
-        - release
-        - master
-    services:
-         - docker:19.03.8-dind
-    before_script:
-            - docker info
-    script:
-        - docker run juliantotzek/verademo1-tomcat
+#Docker Start in Staging:
+#    image: docker:19.03.8-dind 
+#    stage: Deploy_Run
+#    only:
+#        - development
+#        - release
+#        - master
+#    services:
+#         - docker:19.03.8-dind
+#    before_script:
+#            - docker info
+#    script:
+#        - docker run juliantotzek/verademo1-tomcat
 
 Dynamic Analysis in Staging:
     image: veracode/veracode-api-signing
