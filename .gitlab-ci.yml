@@ -1,7 +1,7 @@
 stages:
     - Build
     - Security_Scan
-    - Deploy_Run
+#    - Deploy_Run
     - Dynamic_Analysis
 
 Compile Application:
@@ -108,6 +108,7 @@ Policy Scan Static Analysis:
             - policy_scan_output.txt
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: false
 
 Docker Start in Staging:
     image: docker:19.03.8-dind 
