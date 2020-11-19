@@ -67,21 +67,20 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true -jf results.json
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
     artifacts:
         paths:
             - results.json
+            - pipeline_scan_text_output.txt
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
     
 Sandbox Scan Static Analysis:
-    image: openjdk:11-jre
+    image: veracode/api-wrapper-java
     stage: Security_Scan
     only:
         - release
-    before_script:
-        - wget -q -O veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
     script:
         - java -jar veracode-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release" -createsandbox true
@@ -94,18 +93,16 @@ Sandbox Scan Static Analysis:
     allow_failure: true
     
 Policy Scan Static Analysis:
-    image: openjdk:11-jre
+    image: veracode/api-wrapper-java
     stage: Security_Scan
     only:
         - schedules
         - master
-    before_script:
-        - wget -q -O veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/${VERACODE_WRAPPER_VERSION}/vosp-api-wrappers-java-${VERACODE_WRAPPER_VERSION}.jar
     script:
         - java -jar veracode-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile false -autoscan true
-          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 2>&1 
-          -scantimeout 15 | tee policy_scan_output.txt
+          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 
+          -scantimeout 15 2>&1 | tee policy_scan_output.txt
     artifacts:
         paths:
             - policy_scan_output.txt
@@ -124,7 +121,7 @@ Docker Start in Staging:
     before_script:
             - docker info
     script:
-        - docker run verademo
+        - docker run juliantotzek/verademo1-tomcat
 
 Dynamic Analysis in Staging:
     image: veracode/veracode-api-signing
