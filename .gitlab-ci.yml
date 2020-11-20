@@ -108,21 +108,21 @@ Policy Scan Static Analysis:
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
-#Docker Start in Staging:
-#    image: docker:19.03.8-dind 
-#    stage: Deploy_Run
-#    only:
-#        - development
-#        - release
-#        - master
-#    services:
-#         - docker:19.03.8-dind
-#    before_script:
-#            - docker info
-#    script:
-#        - docker run juliantotzek/verademo1-tomcat
+Docker Start:
+    image: docker:19.03.8-dind 
+    stage: Deploy_Run
+    only:
+        - development
+        - release
+        - master
+    services:
+         - docker:19.03.8-dind
+    before_script:
+            - docker info
+    script:
+        - docker run juliantotzek/verademo1-tomcat
 
-Dynamic Analysis in Staging:
+Dynamic Analysis:
     image: veracode/api-signing
     stage: Dynamic_Analysis
     only:
@@ -130,7 +130,7 @@ Dynamic Analysis in Staging:
         - release
         - master
     before_script:
-        - export VERACODE_API_KEY_ID=${TEAM_ANALYSISCENTER_ID}
-          export VERACODE_API_KEY_SECRET=${TEAM_ANALYSISCENTER_KEY}
+        - export VERACODE_API_KEY_ID=${VERACODE_API_ID}
+          export VERACODE_API_KEY_SECRET=${VERACODE_API_KEY}
     script:
-        - http --auth-type veracode_hmac PUT https://api.veracode.com//was/configservice/v1/scan_occurrences/358303b78b3670b42083a410c770323d?action=RESUBMIT
+        - http --auth-type veracode_hmac PUT https://api.veracode.com/was/configservice/v1/scan_occurrences/c09b91693bc1a95f82065f8f58f0d3d6?action=RESUBMIT
