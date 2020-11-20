@@ -1,7 +1,7 @@
 stages:
     - Build
     - Security_Scan
-    - Deploy_Run
+#    - Deploy_Run
     - Dynamic_Analysis
 
 Compile Application:
@@ -101,8 +101,7 @@ Policy Scan Static Analysis:
     script:
         - java -jar /opt/veracode/api-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile false -autoscan true
-          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 
-          -scantimeout 15 2>&1 | tee policy_scan_output.txt
+          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 2>&1 | tee policy_scan_output.txt
     artifacts:
         paths:
             - policy_scan_output.txt
