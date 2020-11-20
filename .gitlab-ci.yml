@@ -1,7 +1,7 @@
 stages:
     - Build
     - Security_Scan
-#    - Deploy_Run
+    - Deploy_Run
     - Dynamic_Analysis
 
 Compile Application:
