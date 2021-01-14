@@ -67,11 +67,13 @@ Pipeline Scan Staic Analysis:
     only:
         - development
     script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --request_policy "VeraDemo Policy" 2>&1 | tee pipeline_scan_policy_output.txt
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --policy_file VeraDemo_Policy.json -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
     artifacts:
         paths:
             - results.json
             - pipeline_scan_text_output.txt
+            - pipeline_scan_policy_output.txt
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
@@ -107,6 +109,26 @@ Policy Scan Static Analysis:
             - policy_scan_output.txt
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
+Policy - Pipeline Scan create new baseline file:
+    image: veracode/pipeline-scan:latest
+    stage: Security_Scan
+    only:
+        - schedules
+        - master
+    script:
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
+        - git add -f pipeline-basline.json
+        - git commit -m "Pipeline Baseline from $CI_COMMIT_SHORT_SHA" || echo "No changes, nothing to commit!"
+        - git remote rm origin && git remote add origin git@gitlab.com:$CI_PROJECT_PATH.git
+        - git push origin HEAD:development
+    artifacts:
+        paths:
+            - pipeline-basline.json
+            - pipeline_scan_text_output.txt
+        when: always
+        name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: false
 
 Docker Start:
     image: docker:19.03.8-dind 
