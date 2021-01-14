@@ -76,7 +76,7 @@ Pipeline Scan Staic Analysis:
             - pipeline_scan_policy_output.txt
         when: always
         name: "veracode-pipeline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: false
+    allow_failure: true
     
 Sandbox Scan Static Analysis:
     image: veracode/api-wrapper-java
@@ -119,17 +119,26 @@ Policy Scan 2 - Pipeline Scan create new baseline file:
         - master
     script:
         - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
-        - git add -f pipeline-basline.json
-        - git commit -m "Pipeline Baseline from $CI_COMMIT_SHORT_SHA" || echo "No changes, nothing to commit!"
-        - git remote rm origin && git remote add origin git@gitlab.com:$CI_PROJECT_PATH.git
-        - git push origin HEAD:development
     artifacts:
         paths:
             - pipeline-basline.json
             - pipeline_baseline_file_output.txt
         when: always
         name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: false
+    allow_failure: true
+
+Policy Scan 3 - Pipeline Scan baseline file commit:
+    image: alpine/git:latest
+    stage: Security_Scan
+    only:
+        - schedules
+        - master
+    script:
+        - git add -f pipeline-basline.json
+        - git commit -m "Pipeline Baseline from $CI_COMMIT_SHORT_SHA" || echo "No changes, nothing to commit!"
+        - git remote rm origin && git remote add origin git@gitlab.com:$CI_PROJECT_PATH.git
+        - git push origin HEAD:development
+    allow_failure: true
 
 Docker Start:
     image: docker:19.03.8-dind 
