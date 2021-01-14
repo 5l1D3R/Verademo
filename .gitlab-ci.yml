@@ -1,6 +1,7 @@
 stages:
     - Build
     - Security_Scan
+    - Housekeeping
     - Deploy_Run
     - Dynamic_Analysis
 
@@ -94,7 +95,7 @@ Sandbox Scan Static Analysis:
         name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
     
-Policy Scan 1 - Static Analysis:
+Policy Scan Static Analysis:
     image: veracode/api-wrapper-java
     stage: Security_Scan
     only:
@@ -127,9 +128,10 @@ Policy Scan 2 - Pipeline Scan create new baseline file:
         name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
 
-Policy Scan 3 - Pipeline Scan baseline file commit:
+Policy Scan - Pipeline Scan baseline file commit:
     image: alpine/git:latest
-    stage: Security_Scan
+    stage: Housekeeping
+    when: on_success
     only:
         - schedules
         - master
