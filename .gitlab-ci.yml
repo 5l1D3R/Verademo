@@ -114,6 +114,7 @@ Policy Scan 1 - Static Analysis:
 Policy Scan 2 - Pipeline Scan create new baseline file:
     image: veracode/pipeline-scan:latest
     stage: Security_Scan
+    when: on_success
     only:
         - schedules
         - master
@@ -130,6 +131,7 @@ Policy Scan 2 - Pipeline Scan create new baseline file:
 Policy Scan 3 - Pipeline Scan baseline file commit:
     image: alpine/git:latest
     stage: Security_Scan
+    when: on_success
     only:
         - schedules
         - master
