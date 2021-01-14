@@ -68,7 +68,7 @@ Pipeline Scan Staic Analysis:
         - development
     script:
         - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --request_policy "VeraDemo Policy" 2>&1 | tee pipeline_scan_policy_output.txt
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --policy_file VeraDemo_Policy.json -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --policy_file VeraDemo_Policy.json -bf pipeline-basline.json -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
     artifacts:
         paths:
             - results.json
@@ -94,7 +94,7 @@ Sandbox Scan Static Analysis:
         name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
     
-Policy Scan Static Analysis:
+Policy Scan 1 - Static Analysis:
     image: veracode/api-wrapper-java
     stage: Security_Scan
     only:
@@ -111,7 +111,7 @@ Policy Scan Static Analysis:
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
-Policy - Pipeline Scan create new baseline file:
+Policy Scan 2 - Pipeline Scan create new baseline file:
     image: veracode/pipeline-scan:latest
     stage: Security_Scan
     only:
@@ -126,7 +126,7 @@ Policy - Pipeline Scan create new baseline file:
     artifacts:
         paths:
             - pipeline-basline.json
-            - pipeline_scan_text_output.txt
+            - pipeline_baseline_file_output.txt
         when: always
         name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
