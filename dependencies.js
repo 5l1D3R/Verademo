@@ -5,6 +5,8 @@ const scaInputFileName = 'scaResults.json'; // 'results.json'
 const GitlabOutputFileName = 'output-sca-vulnerabilites.json'; // 'veracode-results.json'
 var vulns=[];
 var vulnerabilities=[];
+var remeds=[];
+var remediations=[];
 
 const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
     var results = {};
@@ -18,8 +20,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
         var issues = results.records[0].vulnerabilities;
         numberOfVulns = issues.length
         console.log('Vulnerabilities count: '+issues.length);
-        // start the report file
-        vulnsStart = '{version: 2.0,vulnerabilities:';
+
         var i = 0;
         while (i < numberOfVulns) {
             //console.log(i);
@@ -68,32 +69,39 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
                     {
                       url: results.records[0].vulnerabilities[i].libraries[0].details[0].patch
                     }
-                  ],
-                  remediations: [
-                    {
-                      fixes: [
-                        {
-                          id: results.records[0].libraries[libRef[4]].versions[0].sha1
-                        }
-                      ],
-                      summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
-                      diff: ""
-                    }
                   ]
             };
+
+            remeds = {
+                              fixes: 
+                              [
+                                {
+                                  id: results.records[0].libraries[libRef[4]].versions[0].sha1
+                                }
+                              ],
+                              summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
+                              diff: ""
+                            };
             i++;
             console.log(vulns);
+            console.log(remeds);
             vulnerabilities.push(JSON.stringify(vulns));
+            remediations.push(JSON.stringify(remeds));
         }
-        // finish the report file
-        vulnsEnd = '}';
+        //vulns & remediations start
+        var vulnsStart = '{"version": "2.0","vulnerabilities":[';
+        var remediationsStart = '"remediations": [';
+        // vulns & remediations finish
+        var vulnsEnd = ']';
+        var remediationsEnd = ']}';
         //create full report
-        var vulnerabilitiesReport = vulnsStart+vulnerabilities
-        console.log('Vulnerabilities:'+vulnerabilitiesReport);
+        var fullReportString = vulnsStart+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var vulnerabilitiesReport = JSON.parse(fullReportString);
+        console.log('Vulnerabilities:'+fullReportString);
 
 
         // save to file
-        fs.writeFileSync(outputFileName,vulnerabilitiesReport);
+        fs.writeFileSync(outputFileName,fullReportString);
         console.log('Report file created: '+outputFileName);
 }
 
