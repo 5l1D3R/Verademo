@@ -1,0 +1,109 @@
+const fs = require('fs');
+//const { constants } = require('http2');
+
+const scaInputFileName = 'scaResults.json'; // 'results.json'
+const GitlabOutputFileName = 'output-sca-vulnerabilites.json'; // 'veracode-results.json'
+var vulns=[];
+var vulnerabilities=[];
+
+const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
+    var results = {};
+    var vulnResults={};
+
+    var rawdata = fs.readFileSync(inputFileName);
+    results = JSON.parse(rawdata);
+    console.log('SCA Scan results file found and parsed - validated JSON file');
+
+
+        var issues = results.records[0].vulnerabilities;
+        numberOfVulns = issues.length
+        console.log('Vulnerabilities count: '+issues.length);
+        // start the report file
+        vulnsStart = '{version: 2.0,vulnerabilities:';
+        var i = 0;
+        while (i < numberOfVulns) {
+            //console.log(i);
+            //console.log('ref: '+results.records[0].vulnerabilities[i].libraries[0]._links.ref);
+            const  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
+            libRef = refLink.split("/")
+            //console.log('libRef: '+libRef[4]);
+
+            // construct Vulnerabilities for reports file
+            vulns = {
+                id: results.records[0].libraries[libRef[4]].versions[0].sha1,
+                category: "dependency_scanning",
+                name: results.records[0].vulnerabilities[i].title+' at '+results.records[0].libraries[libRef[4]].name,
+                message: results.records[0].libraries[libRef[4]].description,
+                description: results.records[0].vulnerabilities[i].overview,
+                severity: results.records[0].vulnerabilities[i].cvssScore,
+                solution: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
+                scanner: {
+                    id: "Veracode Agent Based SCA",
+                    name: "Veracode Agent Based SCA"
+                  },
+                  location: {
+                    file: "",
+                    dependency: {
+                      package: {
+                        name: results.records[0].libraries[libRef[4]].coordinateType+':'+results.records[0].libraries[libRef[4]].coordinate1+':'+results.records[0].libraries[libRef[4]].coordinate2,
+                      },
+                      version: results.records[0].libraries[libRef[4]].versions[0].version
+                    }
+                  },
+                  identifiers: [
+                    {
+                      type: "Veracode Agent Based SCA",
+                      name: "Veracode-"+results.metadata.requestDate,
+                      value: results.metadata.requestDate,
+                      url: results.records[0].libraries[libRef[4]].bugTrackerUrl
+                    }
+                  ],
+                  links: [
+                    {
+                      url: results.records[0].libraries[libRef[4]].versions[0]._links.html
+                    },
+                    {
+                      url: results.records[0].vulnerabilities[i]._links.html
+                    },
+                    {
+                      url: results.records[0].vulnerabilities[i].libraries[0].details[0].patch
+                    }
+                  ],
+                  remediations: [
+                    {
+                      fixes: [
+                        {
+                          id: results.records[0].libraries[libRef[4]].versions[0].sha1
+                        }
+                      ],
+                      summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
+                      diff: ""
+                    }
+                  ]
+            };
+            i++;
+            console.log(vulns);
+            vulnerabilities.push(JSON.stringify(vulns));
+        }
+        // finish the report file
+        vulnsEnd = '}';
+        //create full report
+        var vulnerabilitiesReport = vulnsStart+vulnerabilities
+        console.log('Vulnerabilities:'+vulnerabilitiesReport);
+
+
+        // save to file
+        fs.writeFileSync(outputFileName,vulnerabilitiesReport);
+        console.log('Report file created: '+outputFileName);
+}
+
+//try {
+    convertSCAResultFileToJSONReport(scaInputFileName,GitlabOutputFileName);
+//} 
+//catch (error) {
+//    core.setFailed(error.message);
+//}
+
+module.exports = {
+    converSCAResulst: convertSCAResultFileToJSONReport,
+}
