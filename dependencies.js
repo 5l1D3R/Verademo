@@ -7,6 +7,8 @@ var vulns=[];
 var vulnerabilities=[];
 var remeds=[];
 var remediations=[];
+var mapSeverity = "";
+
 
 const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
     var results = {};
@@ -23,11 +25,22 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
 
         var i = 0;
         while (i < numberOfVulns) {
-            //console.log(i);
-            //console.log('ref: '+results.records[0].vulnerabilities[i].libraries[0]._links.ref);
             const  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
-            libRef = refLink.split("/")
-            //console.log('libRef: '+libRef[4]);
+            var libRef = refLink.split("/");
+
+            var oldSeverity = parseInt(results.records[0].vulnerabilities[i].cvssScore);
+
+            //severity mapping
+            if (oldSeverity == '0.0')
+              mapSeverity = 'Unknown'
+            else if (oldSeverity >= '0.1' && oldSeverity < '3.9')
+              mapSeverity = 'Low'
+            else if (oldSeverity >= '4.0' && oldSeverity < '6.9')
+              mapSeverity = 'Medium'
+            else if (oldSeverity >= '7.0' && oldSeverity < '8.9')
+              mapSeverity = 'High'
+            else if (oldSeverity >= '9.0')
+              mapSeverity = 'Critical'
 
             // construct Vulnerabilities for reports file
             vulns = {
@@ -36,7 +49,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
                 name: results.records[0].vulnerabilities[i].title+' at '+results.records[0].libraries[libRef[4]].name,
                 message: results.records[0].libraries[libRef[4]].description,
                 description: results.records[0].vulnerabilities[i].overview,
-                severity: results.records[0].vulnerabilities[i].cvssScore,
+                severity: mapSeverity,
                 solution: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
                 scanner: {
                     id: "Veracode Agent Based SCA",
@@ -82,6 +95,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
                               summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
                               diff: ""
                             };
+            
             i++;
             console.log(vulns);
             console.log(remeds);
