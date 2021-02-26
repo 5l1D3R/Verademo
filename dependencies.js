@@ -42,6 +42,9 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
             else if (oldSeverity >= '9.0')
               mapSeverity = 'Critical'
 
+            console.log('LibRef: '+libRef[4])
+            console.log('ID: '+results.records[0].libraries[libRef[4]].versions[0].sha1)
+
             // construct Vulnerabilities for reports file
             vulns = {
                 id: results.records[0].libraries[libRef[4]].versions[0].sha1,
