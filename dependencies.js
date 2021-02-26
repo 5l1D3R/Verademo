@@ -25,7 +25,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
 
         var i = 0;
         while (i < numberOfVulns) {
-            const  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
+            var  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
             var libRef = refLink.split("/");
 
             var oldSeverity = parseInt(results.records[0].vulnerabilities[i].cvssScore);
