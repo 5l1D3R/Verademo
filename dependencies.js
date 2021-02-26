@@ -52,7 +52,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
                 id: results.records[0].libraries[libRef[4]].versions[0].sha1,
                 category: "dependency_scanning",
                 name: results.records[0].vulnerabilities[i].title+' at '+results.records[0].libraries[libRef[4]].name,
-                message: NULL,
+                message: '',
                 description: results.records[0].libraries[libRef[4]].description+' - '+results.records[0].vulnerabilities[i].overview,
                 severity: mapSeverity,
                 solution: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
