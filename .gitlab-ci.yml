@@ -34,11 +34,18 @@ Build Docker Image:
 Software Composition Analysis App 3rd party:
     image: maven:3.6.0-jdk-8
     stage: Security_Scan
+    before_script:
+        - apt-get update && apt-get -y install nodejs
     script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor  2>&1 | tee sca_output.txt
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json 2>&1 | tee sca_output.txt
+    after_script:
+        - nodejs ./dependencies.js
     artifacts:
+        reports:
+            dependency_scanning: output-sca-vulnerabilites.json
         paths:
             - sca_output.txt
+            - output-sca-vulnerabilites.json
         when: always
         name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
