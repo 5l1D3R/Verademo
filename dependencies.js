@@ -25,7 +25,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
 
         var i = 0;
         while (i < numberOfVulns) {
-            const  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
+            var  refLink = results.records[0].vulnerabilities[i].libraries[0]._links.ref;
             var libRef = refLink.split("/");
 
             var oldSeverity = parseInt(results.records[0].vulnerabilities[i].cvssScore);
@@ -42,13 +42,17 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
             else if (oldSeverity >= '9.0')
               mapSeverity = 'Critical'
 
+            console.log('RefLink: '+refLink)
+            console.log('LibRef: '+libRef[4])
+            console.log('ID: '+results.records[0].libraries[libRef[4]].versions[0].sha1)
+
             // construct Vulnerabilities for reports file
             vulns = {
                 id: results.records[0].libraries[libRef[4]].versions[0].sha1,
                 category: "dependency_scanning",
                 name: results.records[0].vulnerabilities[i].title+' at '+results.records[0].libraries[libRef[4]].name,
-                message: results.records[0].libraries[libRef[4]].description,
-                description: results.records[0].vulnerabilities[i].overview,
+                message: '',
+                description: results.records[0].libraries[libRef[4]].description+' - '+results.records[0].vulnerabilities[i].overview,
                 severity: mapSeverity,
                 solution: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
                 scanner: {
