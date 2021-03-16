@@ -59,9 +59,11 @@ Software Composition Analysis Docker 3rd party:
         DOCKER_HOST: tcp://docker:2375
     before_script:
         - docker pull juliantotzek/verademo1-tomcat
-    
+        - apt-get update && apt-get -y install nodejs
     script:
         - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat 2>&1 | tee sca_docker_output.txt
+    after_script:
+        - nodejs ./dependencies.js
     artifacts:
         paths:
             - sca_docker_output.txt
