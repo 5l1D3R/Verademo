@@ -66,6 +66,8 @@ Software Composition Analysis Docker 3rd party:
     after_script:
         - nodejs ./dependencies.js
     artifacts:
+        reports:
+            dependency_scanning: output-sca-vulnerabilites.json
         paths:
             - sca_docker_output.txt
         when: always
