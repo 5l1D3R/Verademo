@@ -72,7 +72,7 @@ const convertSCAResultFileToJSONReport = (inputFileName,outputFileName) => {
                     {
                       type: "Veracode Agent Based SCA",
                       name: "Veracode-"+results.metadata.requestDate,
-                      value: results.metadata.requestDate,
+                      value: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange,
                       url: results.records[0].libraries[libRef[4]].bugTrackerUrl
                     }
                   ],
