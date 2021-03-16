@@ -50,6 +50,7 @@ Software Composition Analysis App 3rd party:
         name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
 
+
 Software Composition Analysis Docker 3rd party:
     image: juliantotzek/dockercli
     stage: Security_Scan
