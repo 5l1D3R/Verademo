@@ -1,6 +1,7 @@
 stages:
     - Build
     - Security_Scan
+    - Reporting
     - Housekeeping
     - Deploy_Run
     - Dynamic_Analysis
@@ -109,6 +110,24 @@ Sandbox Scan Static Analysis:
         when: always
         name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
+
+Generate static analysis report and issues:
+    image: node:latest
+    stage: Reporting
+    only:
+        - release
+    before_script:
+        - npm ci
+    script:
+        - npm run results-import scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+    artifacts:
+        reports:
+            sast: output-sast-vulnerabilites.json
+        paths: 
+            - output-sast-vulnerabilites.json
+        when: always
+        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
     
 Policy Scan Static Analysis:
     image: veracode/api-wrapper-java
@@ -126,6 +145,24 @@ Policy Scan Static Analysis:
             - policy_scan_output.txt
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
+Generate static analysis report and issues:
+    image: node:latest
+    stage: Reporting
+    only:
+        - schedules
+        - master
+    before_script:
+        - npm ci
+    script:
+        - npm run results-import scan_type=policy profile_name=Verademo gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+    artifacts:
+        reports:
+            sast: output-sast-vulnerabilites.json
+        paths: 
+            - output-sast-vulnerabilites.json
+        when: always
+        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
 Policy Scan 2 - Pipeline Scan create new baseline file:
     image: veracode/pipeline-scan:latest
