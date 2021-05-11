@@ -1,6 +1,7 @@
 stages:
     - Build
     - Security_Scan
+    - Reporting
     - Housekeeping
     - Deploy_Run
     - Dynamic_Analysis
@@ -34,14 +35,22 @@ Build Docker Image:
 Software Composition Analysis App 3rd party:
     image: maven:3.6.0-jdk-8
     stage: Security_Scan
+    before_script:
+        - apt-get update && apt-get -y install nodejs
     script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor  2>&1 | tee sca_output.txt
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json --allow-dirty --scan-collectors maven 2>&1 | tee sca_output.txt
+    after_script:
+        - nodejs ./dependencies.js
     artifacts:
+        reports:
+            dependency_scanning: output-sca-vulnerabilites.json
         paths:
             - sca_output.txt
+            - output-sca-vulnerabilites.json
         when: always
         name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
+
 
 Software Composition Analysis Docker 3rd party:
     image: juliantotzek/dockercli
@@ -52,10 +61,14 @@ Software Composition Analysis Docker 3rd party:
         DOCKER_HOST: tcp://docker:2375
     before_script:
         - docker pull juliantotzek/verademo1-tomcat
-    
+        - apt-get update && apt-get -y install nodejs
     script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat 2>&1 | tee sca_docker_output.txt
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat --json scaResults.json 2>&1 | tee sca_docker_output.txt
+    after_script:
+        - nodejs ./dependencies.js
     artifacts:
+        reports:
+            dependency_scanning: output-sca-vulnerabilites.json
         paths:
             - sca_docker_output.txt
         when: always
@@ -90,13 +103,31 @@ Sandbox Scan Static Analysis:
     script:
         - java -jar /opt/veracode/api-wrapper.jar -vid ${TEAM_ANALYSISCENTER_ID} -vkey ${TEAM_ANALYSISCENTER_KEY}
           -action UploadAndScan -appname "Verademo" -createprofile true -autoscan true -sandboxname "gitlab-release" -createsandbox true
-          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" 2>&1 | tee sandbox_scan_output.txt
+          -filepath ./target/verademo.war -version "Job ${CI_JOB_ID} in pipeline ${CI_PIPELINE_ID}" -scantimeout 15 2>&1 | tee sandbox_scan_output.txt
     artifacts:
         paths:
             - sandbox_scan_output.txt
         when: always
         name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
+
+Generate static analysis report and issues:
+    image: node:latest
+    stage: Reporting
+    only:
+        - release
+    before_script:
+        - npm ci
+    script:
+        - npm run results-import scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+    artifacts:
+        reports:
+            sast: output-sast-vulnerabilites.json
+        paths: 
+            - output-sast-vulnerabilites.json
+        when: always
+        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
     
 Policy Scan Static Analysis:
     image: veracode/api-wrapper-java
@@ -114,6 +145,24 @@ Policy Scan Static Analysis:
             - policy_scan_output.txt
         when: always
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
+Generate static analysis report and issues:
+    image: node:latest
+    stage: Reporting
+    only:
+        - schedules
+        - master
+    before_script:
+        - npm ci
+    script:
+        - npm run results-import scan_type=policy profile_name=Verademo gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+    artifacts:
+        reports:
+            sast: output-sast-vulnerabilites.json
+        paths: 
+            - output-sast-vulnerabilites.json
+        when: always
+        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
 Policy Scan 2 - Pipeline Scan create new baseline file:
     image: veracode/pipeline-scan:latest
