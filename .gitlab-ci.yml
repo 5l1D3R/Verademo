@@ -49,7 +49,7 @@ Software Composition Analysis App 3rd party:
             - output-sca-vulnerabilites.json
         when: always
         name: "veracode-SCA-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: false
+    allow_failure: true
 
 
 Software Composition Analysis Docker 3rd party:
@@ -128,7 +128,6 @@ Generate static analysis report and issues:
         when: always
         name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
-    
 Policy Scan Static Analysis:
     image: veracode/api-wrapper-java
     stage: Security_Scan
@@ -147,6 +146,39 @@ Policy Scan Static Analysis:
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
 
+Policy Scan 2 - Pipeline Scan create new baseline file:
+    image: veracode/pipeline-scan:latest
+    stage: Security_Scan
+    only:
+        - schedules
+        - master
+    script:
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
+    artifacts:
+        paths:
+            - pipeline-basline.json
+            - pipeline_baseline_file_output.txt
+        when: always
+        name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: true
+
+Generate static analysis report and issues:
+    image: node:latest
+    stage: Scan_Reporting
+    only:
+        - release
+    before_script:
+        - npm ci
+    script:
+        - npm run results-import scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+    artifacts:
+        reports:
+            sast: output-sast-vulnerabilites.json
+        paths: 
+            - output-sast-vulnerabilites.json
+        when: always
+        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+
 Generate static analysis report and issues:
     image: node:latest
     stage: Scan_Reporting
@@ -164,22 +196,6 @@ Generate static analysis report and issues:
             - output-sast-vulnerabilites.json
         when: always
         name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-
-Policy Scan 2 - Pipeline Scan create new baseline file:
-    image: veracode/pipeline-scan:latest
-    stage: Security_Scan
-    only:
-        - schedules
-        - master
-    script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
-    artifacts:
-        paths:
-            - pipeline-basline.json
-            - pipeline_baseline_file_output.txt
-        when: always
-        name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: true
 
 Policy Scan - Pipeline Scan baseline file commit:
     image: alpine/git:latest
