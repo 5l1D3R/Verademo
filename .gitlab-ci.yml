@@ -1,7 +1,7 @@
 stages:
     - Build
     - Security_Scan
-    - Reporting
+    - Scan_Reporting
     - Housekeeping
     - Deploy_Run
     - Dynamic_Analysis
@@ -113,7 +113,7 @@ Sandbox Scan Static Analysis:
 
 Generate static analysis report and issues:
     image: node:latest
-    stage: Reporting
+    stage: Scan_Reporting
     only:
         - release
     before_script:
@@ -148,7 +148,7 @@ Policy Scan Static Analysis:
 
 Generate static analysis report and issues:
     image: node:latest
-    stage: Reporting
+    stage: Scan_Reporting
     only:
         - schedules
         - master
