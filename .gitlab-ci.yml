@@ -40,7 +40,7 @@ Software Composition Analysis App 3rd party:
     script:
         - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json --allow-dirty --scan-collectors maven 2>&1 | tee sca_output.txt
     after_script:
-        - nodejs ./dependencies.js
+        - nodejs ./dependencies.js ${PRIVATE_TOKEN} true 17140954
     artifacts:
         reports:
             dependency_scanning: output-sca-vulnerabilites.json
@@ -111,23 +111,6 @@ Sandbox Scan Static Analysis:
         name: "veracode-SANDBOX-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
 
-Generate static analysis report and issues:
-    image: node:latest
-    stage: Scan_Reporting
-    only:
-        - release
-    before_script:
-        - npm ci
-    script:
-        - npm run results-import scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
-    artifacts:
-        reports:
-            sast: output-sast-vulnerabilites.json
-        paths: 
-            - output-sast-vulnerabilites.json
-        when: always
-        name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-
 Policy Scan Static Analysis:
     image: veracode/api-wrapper-java
     stage: Security_Scan
@@ -162,7 +145,7 @@ Policy Scan 2 - Pipeline Scan create new baseline file:
         name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
 
-Generate static analysis report and issues:
+Generate static analysis report and issues - Sandbox Scan:
     image: node:latest
     stage: Scan_Reporting
     only:
@@ -179,7 +162,7 @@ Generate static analysis report and issues:
         when: always
         name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
-Generate static analysis report and issues:
+Generate static analysis report and issues - Policy Scan:
     image: node:latest
     stage: Scan_Reporting
     only:
