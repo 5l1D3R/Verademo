@@ -37,6 +37,9 @@ Software Composition Analysis App 3rd party:
     stage: Security_Scan
     before_script:
         - apt-get update && apt-get -y install nodejs
+        - npm install axios
+        - npm install mathjs
+
     script:
         - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json --allow-dirty --scan-collectors maven 2>&1 | tee sca_output.txt
     after_script:
@@ -62,6 +65,9 @@ Software Composition Analysis Docker 3rd party:
     before_script:
         - docker pull juliantotzek/verademo1-tomcat
         - apt-get update && apt-get -y install nodejs
+        - npm install axios
+        - npm install mathjs
+
     script:
         - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat --json scaResults.json 2>&1 | tee sca_docker_output.txt
     after_script:
