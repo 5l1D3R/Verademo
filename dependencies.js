@@ -22,7 +22,7 @@ var myArgs = process.argv.slice(2);
 
 
 
-const convertSCAResultFileToJSONReport = async (inputFileName,outputFileName) => {
+const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => {
     var results = {};
     var vulnResults={};
     var listIssueResponse={};
