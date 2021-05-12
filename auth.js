@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 
-const id = process.env.API_ID; // your API ID, reading from environment variable
-const key = process.env.API_KEY; // your API key, reading from environment variable
+const id = process.env.VERACODE_API_ID; // your API ID, reading from environment variable
+const key = process.env.VERACODE_API_KEY; // your API key, reading from environment variable
 
 const preFix = "VERACODE-HMAC-SHA-256";
 const verStr = "vcode_request_version_1";
