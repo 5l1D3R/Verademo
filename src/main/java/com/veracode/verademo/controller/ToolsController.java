@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
+
+
 @Controller
 @Scope("request")
 public class ToolsController {
@@ -46,6 +49,9 @@ public class ToolsController {
 		return "tools";
 	}
 
+
+
+	
 	private String ping(String host)
 	{
 		String output = "";
