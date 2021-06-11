@@ -88,8 +88,11 @@ sast:
     stage: test
     only:
         - development
-    include:
-        - template: Security/SAST.gitlab-ci.yml
+    reports:
+      sast: gl-sast-report.js
+    
+include:
+    - template: Security/SAST.gitlab-ci.yml
 
 
 Pipeline Scan Staic Analysis:
