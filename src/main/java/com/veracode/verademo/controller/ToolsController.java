@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
 @Controller
 @Scope("request")
 public class ToolsController {
@@ -49,15 +46,12 @@ public class ToolsController {
 		return "tools";
 	}
 
-
-
-	
 	private String ping(String host)
 	{
 		String output = "";
 		Process proc;
 		try {
-			/* START BAD CODE ---- */
+			/* START BAD CODE */
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				proc = Runtime.getRuntime().exec("cmd.exe /c ping " + host);
 			}
