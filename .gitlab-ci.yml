@@ -1,6 +1,5 @@
 stages:
     - Build
-    - test
     - Security_Scan
     - Scan_Reporting
     - Housekeeping
@@ -83,16 +82,6 @@ Software Composition Analysis Docker 3rd party:
         when: always
         name: "veracode-SCA-DOCKER-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
-
-sast:
-    stage: test
-    only:
-        - development
-    reports:
-      sast: gl-sast-report.js
-    
-include:
-    - template: Security/SAST.gitlab-ci.yml
 
 
 Pipeline Scan Staic Analysis:
