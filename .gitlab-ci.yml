@@ -1,6 +1,6 @@
 stages:
     - Build
-    - test
+    - Security_Scan
     - Scan_Reporting
     - Housekeeping
     - Deploy_Run
