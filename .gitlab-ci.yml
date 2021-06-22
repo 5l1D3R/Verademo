@@ -83,6 +83,7 @@ Software Composition Analysis Docker 3rd party:
         name: "veracode-SCA-DOCKER-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: false
 
+
 Pipeline Scan Staic Analysis:
     image: veracode/pipeline-scan:latest
     stage: Security_Scan
@@ -90,12 +91,13 @@ Pipeline Scan Staic Analysis:
         - development
     script:
         - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --request_policy "VeraDemo Policy" 2>&1 | tee pipeline_scan_policy_output.txt
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --gl_vulnerability_generation true --policy_file VeraDemo_Policy.json -bf pipeline-basline.json -jf results.json 2>&1 | tee pipeline_scan_text_output.txt
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --gl_vulnerability_generation true --policy_file VeraDemo_Policy.json -bf pipeline-basline.json -fjf filtered_results.json 2>&1 | tee pipeline_scan_text_output.txt
     artifacts:
         reports: 
             sast: veracode_gitlab_vulnerabilities.json
         paths:
             - results.json
+            - filtered_results.json
             - pipeline_scan_text_output.txt
             - pipeline_scan_policy_output.pipeline_scan_text_output
             - veracode_gitlab_vulnerabilities.json
@@ -195,6 +197,14 @@ Policy Scan - Pipeline Scan baseline file commit:
     only:
         - schedules
         - master
+    before_script:
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
+        - git config --global user.name "${GITLAB_USER_NAME}"
+        - git config --global user.email "${GITLAB_USER_EMAIL}"
+        - mkdir -p ~/.ssh
+        - cat gitlab-known-hosts >> ~/.ssh/known_hosts
     script:
         - git --help
         - git add -f pipeline-basline.json
