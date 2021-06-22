@@ -197,7 +197,7 @@ Policy Scan - Pipeline Scan baseline file commit:
     only:
         - schedules
         - master
-    before-script:
+    before_script:
         - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
         - eval $(ssh-agent -s)
         - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
