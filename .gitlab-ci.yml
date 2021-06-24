@@ -177,7 +177,7 @@ Generate static analysis report and issues - Policy Scan:
 
 Pipeline Scan create new baseline file:
     image: veracode/pipeline-scan:latest
-    stage: Housekeeping
+    stage: Scan_Reporting
     only:
         - schedules
         - master
@@ -226,6 +226,7 @@ Docker Start:
             - docker info
     script:
         - docker status juliantotzek/verademo1-tomcat
+    allow_failure: true
 
 Dynamic Analysis:
     image: veracode/api-signing
