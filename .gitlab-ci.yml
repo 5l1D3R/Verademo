@@ -239,4 +239,4 @@ Dynamic Analysis:
         - export VERACODE_API_KEY_ID=${VERACODE_API_ID}
           export VERACODE_API_KEY_SECRET=${VERACODE_API_KEY}
     script:
-        - http --auth-type veracode_hmac PUT https://api.veracode.comwas/configservice/v1/analyses/c09b91693bc1a95f82065f8f58f0d3d6 < da_scan_update.json
+        - http --auth-type veracode_hmac PUT https://api.veracode.com/was/configservice/v1/analyses/c09b91693bc1a95f82065f8f58f0d3d6 < da_scan_update.json
