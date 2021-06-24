@@ -139,21 +139,6 @@ Policy Scan Static Analysis:
         name: "veracode-POLICY-SCAN-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
     allow_failure: true
 
-Policy Scan 2 - Pipeline Scan create new baseline file:
-    image: veracode/pipeline-scan:latest
-    stage: Security_Scan
-    only:
-        - schedules
-        - master
-    script:
-        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
-    artifacts:
-        paths:
-            - pipeline-basline.json
-            - pipeline_baseline_file_output.txt
-        when: always
-        name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
-    allow_failure: true
 
 Generate static analysis report and issues - Sandbox Scan:
     image: node:latest
@@ -190,8 +175,23 @@ Generate static analysis report and issues - Policy Scan:
         when: always
         name: "veracode-POLICY-SCAN-RESULTS-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
 
-Policy Scan - Pipeline Scan baseline file commit:
-    image: alpine/git:latest
+Pipeline Scan create new baseline file:
+    image: veracode/pipeline-scan:latest
+    stage: Housekeeping
+    only:
+        - schedules
+        - master
+    script:
+        - java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war -jf pipeline-basline.json 2>&1 | tee pipeline_baseline_file_output.txt
+    artifacts:
+        paths:
+            - pipeline-basline.json
+            - pipeline_baseline_file_output.txt
+        when: always
+        name: "veracode-pipeline-baseline-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+    allow_failure: true
+
+Pipeline Scan baseline file commit:
     stage: Housekeeping
     when: on_success
     only:
@@ -238,4 +238,4 @@ Dynamic Analysis:
         - export VERACODE_API_KEY_ID=${VERACODE_API_ID}
           export VERACODE_API_KEY_SECRET=${VERACODE_API_KEY}
     script:
-        - http --auth-type veracode_hmac PUT https://api.veracode.com/was/configservice/v1/scan_occurrences/c09b91693bc1a95f82065f8f58f0d3d6?action=RESUBMIT
+        - http --auth-type veracode_hmac PUT https://api.veracode.comwas/configservice/v1/analyses/c09b91693bc1a95f82065f8f58f0d3d6 < da_scan_update.json
