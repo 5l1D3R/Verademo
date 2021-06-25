@@ -225,7 +225,7 @@ Docker Start:
     before_script:
             - docker info
     script:
-        - docker docker image history juliantotzek/verademo1-tomcat
+        - docker image history juliantotzek/verademo1-tomcat
 
 Dynamic Analysis:
     image: veracode/api-signing
