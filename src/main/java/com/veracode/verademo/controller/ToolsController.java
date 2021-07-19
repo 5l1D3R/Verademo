@@ -77,37 +77,6 @@ public class ToolsController {
 		
 	}
 
-	private String pong(String host)
-	{
-		String output = "";
-		Process proc;
-		try {
-			/* START BAD CODE */
-			if (System.getProperty("os.name").startsWith("Windows")) {
-				proc = Runtime.getRuntime().exec("cmd.exe /c ping " + host);
-			}
-			else {
-				proc = Runtime.getRuntime().exec("ping " + host);
-			}
-			/* END BAD CODE */
-
-
-			InputStreamReader isr = new InputStreamReader(proc.getInputStream());
-			BufferedReader br = new BufferedReader(isr);
-
-			String line;
-
-			while ((line = br.readLine()) != null) {
-				output += line + "\n";
-			}
-		}
-		catch (IOException ex) {
-			logger.error(ex);
-		}
-		return output;
-		
-	}
-
 
 	private String fortune(String fortuneFile)
 	{
@@ -117,7 +86,7 @@ public class ToolsController {
 		String output = "";
 		Process proc;
 		try {
-			/* START BAD CODE */
+			/* START BAD CODE ---- */
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				proc = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", cmd });
 			}
