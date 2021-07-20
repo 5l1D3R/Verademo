@@ -21,7 +21,7 @@ pipeline {
                             veracode applicationName: "Verademo", criticality: 'VeryHigh',
                             fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
                             scanName: 'build $buildnumber - Jenkins',
-                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war', waitForScan: true,
+                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war', waitForScan: true, timeout: 30,
                             vid: VERACODEID, vkey: VERACODEKEY
                         }
                     },
@@ -52,7 +52,7 @@ pipeline {
                             veracode applicationName: "Verademo", criticality: 'VeryHigh', createSandbox: true, sandboxName: "jenkins-release", 
                             fileNamePattern: '', replacementPattern: '', scanExcludesPattern: '', scanIncludesPattern: '',
                             scanName: 'build $buildnumber - Jenkins',
-                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war',
+                            uploadExcludesPattern: '', uploadIncludesPattern: 'target/*.war', waitForScan: true, timeout: 30,
                             vid: VERACODEID, vkey: VERACODEKEY
                         }
                     },
