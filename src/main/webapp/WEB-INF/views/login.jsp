@@ -29,6 +29,7 @@
 
 <body role="document">
 	<script>
+		
 		eval('alert("Your query string was ' + unescape(document.location.search) + '");');
 		
 		</script>
