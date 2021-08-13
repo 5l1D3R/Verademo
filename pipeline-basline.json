@@ -4,15 +4,15 @@
       "href": "/"
     },
     "self": {
-      "href": "/scans/4bc6387d-ce1d-41c4-a5ef-c6a828740748/findings"
+      "href": "/scans/64d9c93c-2ed8-409a-ac7c-2c2946068137/findings"
     },
     "help": {
       "href": "https://help.veracode.com/reader/tS9CaFwL4_lbIEWWomsJoA/ovfZGgu96UINQxIuTqRDwg"
     }
   },
-  "scan_id": "4bc6387d-ce1d-41c4-a5ef-c6a828740748",
+  "scan_id": "64d9c93c-2ed8-409a-ac7c-2c2946068137",
   "scan_status": "SUCCESS",
-  "message": "Scan successful. Results size: 330590 bytes",
+  "message": "Scan successful. Results size: 329310 bytes",
   "modules": [
     "verademo.war",
     "JS files within verademo.war"
@@ -2968,7 +2968,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 64,
+          "line": 59,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -2976,7 +2976,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1568451847",
+        "procedure_hash": "1106644543",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -3001,7 +3001,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 83,
+          "line": 78,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -3009,7 +3009,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1568451847",
+        "procedure_hash": "1106644543",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -3034,7 +3034,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 90,
+          "line": 85,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -3042,7 +3042,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1568451847",
+        "procedure_hash": "1106644543",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -4737,39 +4737,6 @@
         "cause_hash2_ordinal": "0"
       },
       "flaw_details_link": "https://downloads.veracode.com/securityscan/cwe/v4/java/404.html"
-    },
-    {
-      "title": "eval",
-      "issue_id": 1003,
-      "gob": "B",
-      "severity": 5,
-      "issue_type_id": "taint",
-      "issue_type": "Improper Neutralization of Directives in Dynamically Evaluated Code (\u0027Eval Injection\u0027)",
-      "cwe_id": "95",
-      "display_text": "\u003cspan\u003eThis call to eval() contains untrusted input or potentially untrusted data.  If this input could be modified by an attacker, arbitrary JS code could be executed. \u003c/span\u003e \u003cspan\u003eValidate all untrusted and untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  In general, avoid executing code derived from untrusted input.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/95.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
-      "files": {
-        "source_file": {
-          "file": "WEB-INF/views/login.jsp",
-          "line": 33,
-          "function_name": "!main",
-          "qualified_function_name": "!main",
-          "function_prototype": "!main() : void",
-          "scope": "UNKNOWN"
-        }
-      },
-      "flaw_match": {
-        "procedure_hash": "3915450586",
-        "prototype_hash": "211846691",
-        "flaw_hash": "3524018929",
-        "flaw_hash_count": 1,
-        "flaw_hash_ordinal": 1,
-        "cause_hash": "4199849900",
-        "cause_hash_count": 1,
-        "cause_hash_ordinal": 1,
-        "cause_hash2": "489697663",
-        "cause_hash2_ordinal": "1"
-      },
-      "flaw_details_link": "https://downloads.veracode.com/securityscan/cwe/v4/java/95.html"
     },
     {
       "title": "jQueryResult.attr",
