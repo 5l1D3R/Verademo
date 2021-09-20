@@ -133,6 +133,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                 filePathOrg = findings[m].finding_details.file_path
                 if (java_JSP_ROOT != "" && java_SRC_ROOT != ""){
                     if ( filePathOrg.startsWith('/WEB-INF') ){
+                        java_JSP_ROOT = java_JSP_ROOT.substring(0, java_JSP_ROOT.length - 1)
                         filePath = java_JSP_ROOT+filePathOrg
                     } 
                     else {
@@ -252,7 +253,8 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                     //Java source folder settings
                     filePathOrg = findings[n].finding_details.file_path
                     if (java_JSP_ROOT != "" && java_SRC_ROOT !=""){
-                        if ( filePathOrg.startsWith('WEB-INF') ){
+                        if ( filePathOrg.startsWith('/WEB-INF') ){
+                            java_JSP_ROOT = java_JSP_ROOT.substring(0, java_JSP_ROOT.length - 1)
                             filePath = java_JSP_ROOT+filePathOrg
                         } 
                         else {
