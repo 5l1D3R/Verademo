@@ -4,13 +4,13 @@
       "href": "/"
     },
     "self": {
-      "href": "/scans/64d9c93c-2ed8-409a-ac7c-2c2946068137/findings"
+      "href": "/scans/26464abc-2cb6-47f9-a44c-e6acc7e388ad/findings"
     },
     "help": {
       "href": "https://help.veracode.com/reader/tS9CaFwL4_lbIEWWomsJoA/ovfZGgu96UINQxIuTqRDwg"
     }
   },
-  "scan_id": "64d9c93c-2ed8-409a-ac7c-2c2946068137",
+  "scan_id": "26464abc-2cb6-47f9-a44c-e6acc7e388ad",
   "scan_status": "SUCCESS",
   "message": "Scan successful. Results size: 329310 bytes",
   "modules": [
@@ -2968,7 +2968,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 59,
+          "line": 58,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -2976,7 +2976,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1106644543",
+        "procedure_hash": "1707223166",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -3001,7 +3001,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 78,
+          "line": 77,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -3009,7 +3009,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1106644543",
+        "procedure_hash": "1707223166",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -3034,7 +3034,7 @@
       "files": {
         "source_file": {
           "file": "WEB-INF/views/login.jsp",
-          "line": 85,
+          "line": 84,
           "function_name": "_jspService",
           "qualified_function_name": "com.veracode.compiledjsp.xverademowar.WEB_002dINF.views.login_jsp._jspService",
           "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
@@ -3042,7 +3042,7 @@
         }
       },
       "flaw_match": {
-        "procedure_hash": "1106644543",
+        "procedure_hash": "1707223166",
         "prototype_hash": "3087822160",
         "flaw_hash": "3765405848",
         "flaw_hash_count": 3,
@@ -4838,6 +4838,6 @@
       "flaw_details_link": "https://downloads.veracode.com/securityscan/cwe/v4/java/80.html"
     }
   ],
-  "pipeline_scan": "21.8.0-0",
+  "pipeline_scan": "21.11.0-0",
   "dev_stage": "DEVELOPMENT"
 }
