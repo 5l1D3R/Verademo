@@ -28,7 +28,6 @@
 </head>
 
 <body role="document">
-	<div class="container">
 
 		<div class="header clearfix">
 			<nav>
