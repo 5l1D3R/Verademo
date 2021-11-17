@@ -119,3 +119,4 @@ dist
 output-sast-vulnerabilities.json
 .gitlab-ci.yml.backup
 /target/
+.DS_Store
