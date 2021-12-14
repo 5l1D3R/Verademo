@@ -85,14 +85,11 @@ Software Composition Analysis Docker 3rd party:
 
 
 Pipeline Scan Staic Analysis:
-    #image: veracode/pipeline-scan:latest
-    image: maven:3.6.0-jdk-8
+    image: veracode/pipeline-scan:latest
     stage: Security_Scan
     only:
         - development
     script:
-        #- java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --request_policy "VeraDemo Policy" 2>&1 | tee pipeline_scan_policy_output.txt
-        #- java -jar /opt/veracode/pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --gl_vulnerability_generation true --policy_file VeraDemo_Policy.json -bf pipeline-basline.json -fjf filtered_results.json 2>&1 | tee pipeline_scan_text_output.txt
         - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --request_policy "VeraDemo Policy" 2>&1 | tee pipeline_scan_policy_output.txt
         - java -jar pipeline-scan.jar -vid ${VERACODE_API_ID} -vkey ${VERACODE_API_KEY} --file target/verademo.war --issue_details true --gl_issue_generation true --gl_vulnerability_generation true --policy_file VeraDemo_Policy.json -bf pipeline-basline.json -fjf filtered_results.json 2>&1 | tee pipeline_scan_text_output.txt
     artifacts:
