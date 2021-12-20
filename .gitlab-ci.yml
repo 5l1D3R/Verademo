@@ -63,20 +63,20 @@ Software Composition Analysis Docker 3rd party:
         - docker:dind
     variables:
         DOCKER_HOST: tcp://docker:2375
-    before_script:
-        - curl -sL https://deb.nodesource.com/setup_17.x | bash -
-        - apt-get update && apt-get -y install nodejs
-        - npm install axios
-        - npm install mathjs
-        - docker pull juliantotzek/verademo1-tomcat
+#    before_script:
+#        - curl -sL https://deb.nodesource.com/setup_17.x | bash -
+#        - apt-get update && apt-get -y install nodejs
+#        - npm install axios
+#        - npm install mathjs
+#        - docker pull juliantotzek/verademo1-tomcat
 
     script:
         - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan --image juliantotzek/verademo1-tomcat --json scaResults.json 2>&1 | tee sca_docker_output.txt
-    after_script:
-        - nodejs ./dependencies.js
+#    after_script:
+#        - nodejs ./dependencies.js
     artifacts:
-        reports:
-            dependency_scanning: output-sca-vulnerabilites.json
+#        reports:
+#            dependency_scanning: output-sca-vulnerabilites.json
         paths:
             - sca_docker_output.txt
         when: always
