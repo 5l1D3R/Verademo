@@ -40,9 +40,19 @@ Software Composition Analysis App 3rd party:
         - apt-get update && apt-get -y install nodejs
         - npm install axios
         - npm install mathjs
+        - export SRCCLR_SCM_TYPE="GITLAB"
+        - export SRCCLR_SCM_TOKEN=${PRIVATE_TOKEN}
+        - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+        - eval $(ssh-agent -s)
+        - ssh-add <(echo "$GIT_SSH_PRIV_KEY")
+        - mkdir -p ~/.ssh
+        - cat gitlab-known-hosts >> ~/.ssh/known_hosts
+        - git config --global user.name "&{GITLAB_USER_NAME}"
+        - git config --global user.email "${GITLAB_USER_EMAIL}"
+        - git remote rm origin && git remote add origin git@gitlab.com:$CI_PROJECT_PATH.git
 
     script:
-        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json --allow-dirty --scan-collectors maven 2>&1 | tee sca_output.txt
+        - curl -sSL https://download.sourceclear.com/ci.sh | bash -s scan . --update-advisor --json scaResults.json --allow-dirty --scan-collectors maven --pull-request 2>&1 | tee sca_output.txt
     after_script:
         - nodejs ./dependencies.js ${PRIVATE_TOKEN} true 17140954
     artifacts:
