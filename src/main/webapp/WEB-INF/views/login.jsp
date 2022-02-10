@@ -33,6 +33,8 @@
         eval('alert("Your query string was ' + unescape(document.location.search) + '");');
     </script>
 
+	
+
 		<div class="header clearfix">
 			<nav>
 				<ul class="nav nav-pills pull-right">
