@@ -251,9 +251,74 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
         // vulns & remediations finish
         var vulnsEnd = ']';
         var remediationsEnd = ']}';
+        var dependencyFiles = `
+        "dependency_files": [
+          {
+            "path": "./package-lock.json",
+            "package_manager": "npm",
+            "dependencies": [
+              {
+                "package": {
+                  "name": "direct dependency"
+                },
+                "version": "1.1.0",
+                "dependency_path": [
+                  {
+                    "iid": -59369648.6913613
+                  }
+                ],
+                "iid": 62164375.094831884,
+                "direct": true
+              },
+              
+            ]
+          }
+        ],
+        `
+        var scanObject = `
+        "scan": {
+          "analyzer": {
+            "id": "12.0.1",
+            "name": "Veracode Agent based SCA",
+            "version": "12.0.1",
+            "vendor": {
+              "name": "Veracode"
+            },
+            "url": "https://www.veracode.com"
+          },
+          "end_time": "0614-47-04T09:00:49",
+          "scanner": {
+            "id": "12.0.1"",
+            "name": "Veracode Agent based SCA",
+            "version": "12.0.1",
+            "vendor": {
+              "name": "Veracode Agent based SCA"
+            },
+            "url": "https://www.veracode.com"
+          },
+          "start_time": "1953-39-27T20:86:87",
+          "status": "success",
+          "type": "dependency_scanning",
+          "messages": [
+            {
+              "level": "warn",
+              "value": "amet eu"
+            },
+            {
+              "level": "fatal",
+              "value": "sit dolore adipisicing ipsum"
+            },
+            {
+              "level": "fatal",
+              "value": "in"
+            }
+          ]
+        },
+        `
+
         //create full report
         var vulnerabilitiesObject = '"vulnerabilities":['
-        var fullReportString = vulnsStart+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var fullReportString = vulnsStart+dependencyFiles+scanObject+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
         var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
