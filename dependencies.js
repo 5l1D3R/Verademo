@@ -80,6 +80,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                 id: results.records[0].libraries[libRef[4]].versions[0].sha1,
                 category: "dependency_scanning",
                 name: results.records[0].vulnerabilities[i].title+' at '+results.records[0].libraries[libRef[4]].name,
+                cve: results.records[0].vulnerabilities[i].cve,
                 message: '',
                 description: results.records[0].libraries[libRef[4]].description+' - '+results.records[0].vulnerabilities[i].overview,
                 severity: mapSeverity,
@@ -233,7 +234,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             i++;
         }
         //vulns & remediations start
-        var vulnsStart = '{"version": "2.0","vulnerabilities":[';
+        var vulnsStart = '{"version": "15.0.4","vulnerabilities":[';
         var remediationsStart = '"remediations": [';
         // vulns & remediations finish
         var vulnsEnd = ']';
