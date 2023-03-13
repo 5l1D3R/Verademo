@@ -110,7 +110,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                       type: "Veracode Agent Based SCA",
                       name: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
                       value: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
-                      url: results.records[0].libraries[libRef[4]].bugTrackerUrl
+                      url: myURL
                     }
                   ],
                   links: [
