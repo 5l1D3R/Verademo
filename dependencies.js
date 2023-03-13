@@ -75,11 +75,14 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             else if (oldSeverity >= '9.0')
               mapSeverity = 'Critical'
 
-            if ( results.records[0].libraries[libRef[4]].bugTrackerUrl == "" ){
+            if ( results.records[0].libraries[libRef[4]].bugTrackerUrl == null ){
               var myURL = results.records[0].libraries[libRef[4]].versions[0]._links.html
             }
-            else {
+            else if ( results.records[0].libraries[libRef[4]].bugTrackerUrl != null ) {
               var myURL = results.records[0].libraries[libRef[4]].bugTrackerUrl
+            }
+            else {
+              var myURL = "https://www.veracode.com"
             }
 
             // construct Vulnerabilities for reports file
