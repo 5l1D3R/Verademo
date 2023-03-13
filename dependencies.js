@@ -245,13 +245,15 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             i++;
         }
         //vulns & remediations start
-        var vulnsStart = '{"version": "15.0.4","vulnerabilities":[';
+        var vulnsStart = '{"version": "14.0.1",'
+        var vulnerabilitiesObject = '"vulnerabilities":['
         var remediationsStart = '"remediations": [';
         // vulns & remediations finish
         var vulnsEnd = ']';
         var remediationsEnd = ']}';
         //create full report
-        var fullReportString = vulnsStart+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var vulnerabilitiesObject = '"vulnerabilities":['
+        var fullReportString = vulnsStart+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
         var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
