@@ -84,7 +84,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                 message: '',
                 description: results.records[0].libraries[libRef[4]].description+' - '+results.records[0].vulnerabilities[i].overview,
                 severity: mapSeverity,
-                solution: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
+                solution: 'Solution: '+results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
                 scanner: {
                     id: "Veracode Agent Based SCA",
                     name: "Veracode Agent Based SCA"
@@ -103,7 +103,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                       type: "Veracode Agent Based SCA",
                       name: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
                       value: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
-                      url: results.records[0].libraries[libRef[4]].bugTrackerUrl
+                      url: 'URL: '+results.records[0].libraries[libRef[4]].bugTrackerUrl
                     }
                   ],
                   links: [
@@ -127,8 +127,8 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                                   id: results.records[0].libraries[libRef[4]].versions[0].sha1
                                 }
                               ],
-                              summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
-                              //diff: ""
+                              summary: 'Summary: '+results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
+                              diff: "There is no diff"
                             };
             
             vulnerabilities.push(JSON.stringify(vulns));
