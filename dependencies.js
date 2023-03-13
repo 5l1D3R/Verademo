@@ -90,7 +90,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                     name: "Veracode Agent Based SCA"
                   },
                   location: {
-                    file: "",
+                    file: "package-lock.json",
                     dependency: {
                       package: {
                         name: results.records[0].libraries[libRef[4]].coordinateType+':'+results.records[0].libraries[libRef[4]].coordinate1+':'+results.records[0].libraries[libRef[4]].coordinate2,
@@ -109,13 +109,14 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                   links: [
                     {
                       url: results.records[0].libraries[libRef[4]].versions[0]._links.html
-                    },
-                    {
-                      url: results.records[0].vulnerabilities[i]._links.html
-                    },
-                    {
-                      url: results.records[0].vulnerabilities[i].libraries[0].details[0].patch
                     }
+                    //,
+                    //{
+                    //  url: results.records[0].vulnerabilities[i]._links.html
+                    //},
+                    //{
+                    //  url: results.records[0].vulnerabilities[i].libraries[0].details[0].patch
+                    //}
                   ]
             };
 
@@ -127,7 +128,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                                 }
                               ],
                               summary: results.records[0].vulnerabilities[i].libraries[0].details[0].fixText,
-                              diff: ""
+                              //diff: ""
                             };
             
             vulnerabilities.push(JSON.stringify(vulns));
