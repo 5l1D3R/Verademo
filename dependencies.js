@@ -75,6 +75,13 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             else if (oldSeverity >= '9.0')
               mapSeverity = 'Critical'
 
+            if ( results.records[0].libraries[libRef[4]].bugTrackerUrl == "" ){
+              var myURL = results.records[0].libraries[libRef[4]].versions[0]._links.html
+            }
+            else {
+              var myURL = results.records[0].libraries[libRef[4]].bugTrackerUrl
+            }
+
             // construct Vulnerabilities for reports file
             vulns = {
                 id: results.records[0].libraries[libRef[4]].versions[0].sha1,
@@ -103,7 +110,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                       type: "Veracode Agent Based SCA",
                       name: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
                       value: results.records[0].vulnerabilities[i].language+' - '+results.records[0].libraries[libRef[4]].name+' - Version: '+results.records[0].vulnerabilities[i].libraries[0].details[0].versionRange+' - CVE: '+results.records[0].vulnerabilities[i].cve,
-                      url: 'URL: '+results.records[0].libraries[libRef[4]].bugTrackerUrl
+                      url: results.records[0].libraries[libRef[4]].bugTrackerUrl
                     }
                   ],
                   links: [
