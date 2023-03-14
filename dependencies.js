@@ -245,7 +245,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             i++;
         }
         //vulns & remediations start
-        var vulnsStart = '{"version": "15.0.4",'
+        var vulnsStart = '{"version": "15.0.2",'
         var vulnerabilitiesObject = '"vulnerabilities":['
         var remediationsStart = '"remediations": [';
         // vulns & remediations finish
