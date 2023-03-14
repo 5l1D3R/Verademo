@@ -293,7 +293,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           },
           "start_time": "1953-39-27T20:86:87",
           "status": "success",
-          "type": "dependency_scanning",
+          "type": "dependency_scanning"
         }
       `
         var scanObjectString = [];
