@@ -272,7 +272,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
               }
             ]
           }
-        ],
+        ]
       }
         var dependency_files_object = [];
         dependency_files_object.push(JSON.stringify(dependencyFiles));
@@ -315,14 +315,14 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
               value: "in"
             }
           ]
-        },
+        }
       }
         var scanObjectString = [];
         scanObjectString.push(JSON.stringify(scanObject));
 
         //create full report
         var vulnerabilitiesObject = '"vulnerabilities":['
-        var fullReportString = vulnsStart+dependency_files_object+scanObjectString+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var fullReportString = vulnsStart+dependency_files_object+','+scanObjectString+','+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
         var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
