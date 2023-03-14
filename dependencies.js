@@ -269,8 +269,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                 ],
                 "iid": 62164375.094831884,
                 "direct": true
-              },
-              
+              }
             ]
           }
         ],
@@ -288,7 +287,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           },
           "end_time": "0614-47-04T09:00:49",
           "scanner": {
-            "id": "12.0.1"",
+            "id": "12.0.1",
             "name": "Veracode Agent based SCA",
             "version": "12.0.1",
             "vendor": {
