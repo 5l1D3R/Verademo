@@ -262,6 +262,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                   "name": "commons-httpclient"
                 },
                 "version": "3.1"
+              }
             ]
           }
         ]
