@@ -274,6 +274,8 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           }
         ],
       }
+        dependency_files_object.push(JSON.stringify(dependency_files));
+
         var scanObject = {
         scan: {
           analyzer: {
@@ -314,10 +316,11 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           ]
         },
       }
+        scanObjectString.push(JSON.stringify(scanObject));
 
         //create full report
         var vulnerabilitiesObject = '"vulnerabilities":['
-        var fullReportString = vulnsStart+dependencyFiles+scanObject+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var fullReportString = vulnsStart+dependency_files_object+scanObjectString+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
         var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
