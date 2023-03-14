@@ -264,10 +264,10 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                 "version": "3.1",
                 "dependency_path": [
                   {
-                    "iid": 964cd74171f427720480efdec40a7c7f6e58426a
+                    "iid": 1
                   }
                 ],
-                "iid": 964cd74171f427720480efdec40a7c7f6e58426a,
+                "iid": 1,
                 "direct": false
               }
             ]
