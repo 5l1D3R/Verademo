@@ -259,17 +259,9 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             "dependencies": [
               {
                 "package": {
-                  "name": "direct dependency"
+                  "name": "commons-httpclient"
                 },
-                "version": "1.1.0",
-                "dependency_path": [
-                  {
-                    "iid": -59369648.6913613
-                  }
-                ],
-                "iid": 62164375.094831884,
-                "direct": true
-              }
+                "version": "3.1"
             ]
           }
         ]
@@ -301,20 +293,6 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           "start_time": "1953-39-27T20:86:87",
           "status": "success",
           "type": "dependency_scanning",
-          "messages": [
-            {
-              "level": "warn",
-              "value": "amet eu"
-            },
-            {
-              "level": "fatal",
-              "value": "sit dolore adipisicing ipsum"
-            },
-            {
-              "level": "fatal",
-              "value": "in"
-            }
-          ]
         }
       `
         var scanObjectString = [];
