@@ -268,7 +268,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                   }
                 ],
                 "iid": 62164375.094831884,
-                di"rect: true
+                "direct": true
               }
             ]
           }
