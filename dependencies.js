@@ -275,7 +275,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
         ],
       }
         var dependency_files_object = [];
-        dependency_files_object.push(JSON.stringify(dependency_files));
+        dependency_files_object.push(JSON.stringify(dependencyFiles));
 
         var scanObject = {
         scan: {
