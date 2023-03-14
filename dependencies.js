@@ -262,11 +262,6 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
                   "name": "commons-httpclient"
                 },
                 "version": "3.1",
-                "dependency_path": [
-                  {
-                    "iid": 1
-                  }
-                ],
                 "iid": 1,
                 "direct": true
               }
@@ -274,6 +269,12 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
           }
         ]
       `
+      //"dependency_path": [
+      //  {
+      //    "iid": 1
+      //  }
+      //],
+
         var dependency_files_object = [];
         dependency_files_object.push(JSON.stringify(dependencyFiles));
 
