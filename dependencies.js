@@ -322,7 +322,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
 
         //create full report
         var vulnerabilitiesObject = '"vulnerabilities":['
-        var fullReportString = vulnsStart+dependency_files_object+','+scanObjectString+','+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
+        var fullReportString = vulnsStart+dependencyFiles+','+scanObject+','+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
         var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
