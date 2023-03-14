@@ -245,7 +245,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
             i++;
         }
         //vulns & remediations start
-        var vulnsStart = '{"version": "14.0.1",'
+        var vulnsStart = '{"version": "15.0.4",'
         var vulnerabilitiesObject = '"vulnerabilities":['
         var remediationsStart = '"remediations": [';
         // vulns & remediations finish
@@ -319,7 +319,7 @@ const convertSCAResultFileToJSONReport = async(inputFileName,outputFileName) => 
         //create full report
         var vulnerabilitiesObject = '"vulnerabilities":['
         var fullReportString = vulnsStart+dependencyFiles+scanObject+vulnerabilitiesObject+vulnerabilities+vulnsEnd+','+remediationsStart+remediations+remediationsEnd
-        var vulnerabilitiesReport = JSON.parse(fullReportString);
+        //var vulnerabilitiesReport = JSON.parse(fullReportString);
         //console.log('Vulnerabilities:'+fullReportString);
 
 
