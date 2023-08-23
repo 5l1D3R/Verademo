@@ -92,7 +92,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
         var json_findings=[]
 
         //json start
-        json_start = '{"version": "2.0","vulnerabilities": ['
+        json_start = '{"version": "14.0.0","vulnerabilities": ['
 
         //json findings
         m = 0
@@ -133,8 +133,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                 filePathOrg = findings[m].finding_details.file_path
                 if (java_JSP_ROOT != "" && java_SRC_ROOT != ""){
                     if ( filePathOrg.startsWith('/WEB-INF') ){
-                        new_JSP_ROOT = java_JSP_ROOT.substring(0, java_JSP_ROOT.length -1)
-                        filePath = new_JSP_ROOT+filePathOrg
+                        filePath = java_JSP_ROOT+filePathOrg
                     } 
                     else {
                         filePath = java_SRC_ROOT+filePathOrg
@@ -154,33 +153,31 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
 
                 json_finding = {
                     id: id,
-                    cve: id,
                     category: "sast",
                     name: CWEName,
                     message: CWEName,
+                    cve: id,
                     description: description,
                     severity: severity,
                     confidence: "High",
                     flaw_details_link: "",
                     scanner: {
-                    id: "veracode_sast",
-                    name: "Veracode Static Code Analysis Scan"
+                        id: "security_code_scan",
+                        name: "Veracode Static Code Analysis"
                     },
                     location: {
-                    file: filePath,
-                    start_line: lineNumber,
+                        file: filePath,
+                        start_line: lineNumber,
                     end_line: lineNumber,
                     class: filePath,
                     method: method,
-                    dependency: {
-                        package: {}
-                    }
+
                     },
                     identifiers: [
                     {
                         type: "CWE",
                         name: "CWE-"+cwe,
-                        value: cwe,
+                        value: ""+cwe+"",
                         url: "https://cwe.mitre.org/data/definitions/"+cwe+".html"
                     }
                     ]
@@ -197,7 +194,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
 
 
         //json end
-        json_end = ']}'
+        json_end = '],"scan": {"scanner": {"id": "security_code_scan","name": "Veracode Static Code Analysis","url": "https://www.veracode.com","vendor": {"name": "Veracode"},"version": "latest"},"type": "sast","status": "success","start_time": "placeholder-value","end_time": "placeholder-value"}}'
 
         var fullReportJson = json_start+json_findings+json_end
         var flawsReport = JSON.parse(fullReportJson);
@@ -254,8 +251,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                     filePathOrg = findings[n].finding_details.file_path
                     if (java_JSP_ROOT != "" && java_SRC_ROOT !=""){
                         if ( filePathOrg.startsWith('/WEB-INF') ){
-                            new_JSP_ROOT = java_JSP_ROOT.substring(0, java_JSP_ROOT.length - 1)
-                            filePath = new_JSP_ROOT+filePathOrg
+                            filePath = java_JSP_ROOT+filePathOrg
                         } 
                         else {
                             filePath = java_SRC_ROOT+filePathOrg
@@ -289,16 +285,21 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                     oldIssuesLength = oldIssues.length
 
 
-                    o=0
-                    while (o<oldIssuesLength){
-                        if (oldIssues[o].title == issueTitle){
-                            exisitingOldIssue = true
-                            break
+                    if ( oldIssuesLength == 0 ){
+                        exisitingOldIssue = false
+                    }
+                    else {
+                        o=0
+                        while (o<oldIssuesLength){
+                            if (oldIssues[o].title == issueTitle){
+                                exisitingOldIssue = true
+                                break
+                            }
+                            else {
+                                exisitingOldIssue = false
+                            }
+                            o++
                         }
-                        else {
-                            exisitingOldIssue = false
-                        }
-                        o++
                     }
 
 
@@ -457,21 +458,37 @@ var getFindings = async (app_guid,sandbox_guid,) =>{
 }
 
 var getOldIssues = async (app_guid,sandbox_guid,) =>{
-    try {
-        var listOldIssueResponse = await Axios.request({
-            method: 'GET',
-            headers:{
-                'PRIVATE-TOKEN': workingArgs['gitlab_token']
-            },
-            url: 'https://gitlab.com/api/v4/projects/'+workingArgs['gitlab_project']+'/issues?per_page=100&lables=Static%21Code%21Analysis'
-        });
+    var listIssueResponse = [];
+    const getOldIssue = async (page) => {
+        try {
+            var listOldIssueResponse = await Axios.request({
+                method: 'GET',
+                headers:{
+                    'PRIVATE-TOKEN': workingArgs['gitlab_token']
+                },
+                url: 'https://gitlab.com/api/v4/projects/'+workingArgs['gitlab_project']+'/issues?per_page=100&labels=Static%20Code%20Analysis&page='+page
+            });
 
-        oldIssuesResponse = listOldIssueResponse.data
-        return oldIssuesResponse
+            return listOldIssueResponse.data
+            
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
-    catch (e) {
-        console.log(e)
+    var page = 1
+    var m = 0
+    while (m < page) {
+        var newResults = await getOldIssue(page);
+        var resultCount = newResults.length;
+        console.log('# of results: '+resultCount)
+        listIssueResponse = listIssueResponse.concat(newResults);
+        if ( resultCount == 100 ){
+          page++
+        }
+        m++
     }
+    return listIssueResponse
 }
 
 var createIssue = async (issueTitle,issueLable,issueDescription) =>{
