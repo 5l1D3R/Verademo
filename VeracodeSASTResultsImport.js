@@ -202,8 +202,9 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
             m++
 
         }
-        const time = new Date().toISOString;
-        console.log('Report time: '+time)
+        const time = new Date().toISOString();
+        const newTime = time.substring(0, time.length - 5);
+        console.log('Report time: '+newTime)
 
         //json end
         json_end = `],"scan": {
@@ -227,8 +228,8 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
             },
             "primary_identifiers": [],
             "type": "sast",
-            "start_time": "${time}",
-            "end_time": "${time}",
+            "start_time": "${newTime}",
+            "end_time": "${newTime}",
             "status": "success"
           }
         }`
