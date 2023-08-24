@@ -202,10 +202,36 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
             m++
 
         }
-
+        const time = new Date().toISOString;
+        console.log('Report time: '+time)
 
         //json end
-        json_end = '],"scan": {"scanner": {"id": "security_code_scan","name": "Veracode Static Code Analysis","url": "https://www.veracode.com","vendor": {"name": "Veracode"},"version": "latest"},"type": "sast","status": "success","start_time": "placeholder-value","end_time": "placeholder-value"}}'
+        json_end = `],"scan": {
+            "analyzer": {
+              "id": "veracodeSAST",
+              "name": "Veracode SAST",
+              "url": "https://www.veracode.com",
+              "vendor": {
+                "name": "Veracode"
+              },
+              "version": "latest"
+            },
+            "scanner": {
+              "id": "veracodeSAST",
+              "name": "Veracode SAST",
+              "url": "https://www.veracode.com",
+              "vendor": {
+                "name": "Veracode"
+              },
+              "version": "latest"
+            },
+            "primary_identifiers": [],
+            "type": "sast",
+            "start_time": "${time}",
+            "end_time": "${time}",
+            "status": "success"
+          }
+        }`
 
         var fullReportJson = json_start+json_findings+json_end
         var flawsReport = JSON.parse(fullReportJson);
