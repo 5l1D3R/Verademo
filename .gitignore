@@ -11,3 +11,4 @@ WebContent/
 flaws.json
 .vscode/settings.json
 /bin/
+node_modules/
