@@ -176,6 +176,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                             url: "https://cwe.mitre.org/data/definitions/"+cwe+".html"
                         }
                     ],
+                    /*
                     tracking: {
                         type: "source",
                         items: [
@@ -192,6 +193,7 @@ const VeracodeSASTResultsImport = async (outputFileName) => {
                           }
                         ]
                       }
+                      */
                 }
                 
                 json_findings.push(JSON.stringify(json_finding));
