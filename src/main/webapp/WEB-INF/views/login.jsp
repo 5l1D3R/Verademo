@@ -29,8 +29,6 @@
 
 <body role="document">
 
-	<div class="container">
-
 		<div class="header clearfix">
 			<nav>
 				<ul class="nav nav-pills pull-right">

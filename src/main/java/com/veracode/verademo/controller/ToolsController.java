@@ -51,7 +51,7 @@ public class ToolsController {
 		String output = "";
 		Process proc;
 		try {
-			/* START BAD CODE */
+			/* START BAD CODE ----*/
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				proc = Runtime.getRuntime().exec("cmd.exe /c ping " + host);
 			}
@@ -59,6 +59,7 @@ public class ToolsController {
 				proc = Runtime.getRuntime().exec("ping " + host);
 			}
 			/* END BAD CODE */
+
 
 			InputStreamReader isr = new InputStreamReader(proc.getInputStream());
 			BufferedReader br = new BufferedReader(isr);
@@ -74,9 +75,8 @@ public class ToolsController {
 		}
 		return output;
 		
-		
-		
 	}
+
 
 	private String fortune(String fortuneFile)
 	{
@@ -86,7 +86,7 @@ public class ToolsController {
 		String output = "";
 		Process proc;
 		try {
-			/* START BAD CODE */
+			/* START BAD CODE ---- */
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				proc = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", cmd });
 			}

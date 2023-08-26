@@ -148,7 +148,11 @@ Generate static analysis report and issues - Sandbox Scan:
     before_script:
         - npm ci
     script:
+<<<<<<< HEAD
         - node .veracode/veracodeSastResultsImport.js scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+=======
+        - npm run results-import scan_type=sandbox profile_name=Verademo sandbox_name=gitlab-release gitlab_token=${PRIVATE_TOKEN} gitlab_project=17140954 create_issue=true  
+>>>>>>> 0be4f1934dfcf2765e8a50545cf57bf6e70dbd61
     artifacts:
         reports:
             sast: output-sast-vulnerabilites.json
