@@ -10,7 +10,7 @@ Create_sbom_artefact:
     artifacts:
         reports:
             cyclonedx: GitLabResults/Veracode-CycloneDX.json
-            dependency_scanning: GitLabResults/Veracode-CycloneDX.json
+            dependency_scanning: output-sca-vulnerabilites.json
         when: always
 
 
